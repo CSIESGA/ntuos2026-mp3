@@ -1,0 +1,10 @@
+.github/workflows/grading.yml
+tests/*public*.py
+user/test*.c
+mp.conf
+mp.sh
+grade/
+scripts/pre-commit
+scripts/pre-push
+tests/grading.conf
+libs/
