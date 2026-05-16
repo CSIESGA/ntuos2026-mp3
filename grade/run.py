@@ -242,8 +242,8 @@ def generate_markdown(total_score, max_score, details, md_path, verdict):
     if test_details:
         test_names = [d["test_case"] for d in test_details]
         multiplier = 1.0 - penalty_ratio
-        max_scores_list = [d["max_score"] * multiplier for d in test_details]
-        actual_scores_list = [d["score"] * multiplier for d in test_details]
+        max_scores_list = [d["max_score"] for d in test_details]
+        actual_scores_list = [d["score"] for d in test_details]
         y_max = max(max_scores_list)
 
         x_labels = ", ".join(f'"{name}"' for name in test_names)
@@ -258,6 +258,12 @@ def generate_markdown(total_score, max_score, details, md_path, verdict):
         lines.append(f'    bar [{bar_actual}]')
         lines.append("```")
         lines.append("")
+
+        if penalty_ratio > 0:
+            lines.append(f"> [!WARNING]")
+            lines.append(f"> Late Days: {verdict["late_days"]}")
+            lines.append(f"> Late Submission Penalty: {int(penalty_ratio * 100)}%")
+            lines.append(f"> Raw Score: {total_score}/{max_score}")
 
         lines.append(f"- Total Score: {total_score * multiplier:.1f}/{max_score}")
     lines.append("")

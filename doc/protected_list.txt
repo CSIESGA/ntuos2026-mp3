@@ -6,5 +6,6 @@ mp.sh
 grade/
 scripts/pre-commit
 scripts/pre-push
+scripts/restore-target-files
 tests/grading.conf
 libs/

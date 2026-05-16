@@ -15,9 +15,12 @@ jobs:
   mp-setup:
     runs-on: ubuntu-slim
     outputs:
-      image: ${{ steps.vars.outputs.image }}
-      options: ${{ steps.vars.outputs.options }}
-      fail: ${{ steps.verify.outputs.fail }}
+      image:            ${{ steps.vars.outputs.image }}
+      options:          ${{ steps.vars.outputs.options }}
+      fail:             ${{ steps.verify.outputs.fail }}
+      target_sha:       ${{ steps.verify.outputs.target_sha }}
+      target_timestamp: ${{ steps.verify.outputs.target_timestamp }}
+      target_author:    ${{ steps.verify.outputs.target_author }}
     steps:
       - name: Optimize Git and Checkout
         run: |
@@ -82,6 +85,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
+      - name: Restore Student Files at target_sha
+        env:
+          TARGET_SHA: ${{ needs.mp-setup.outputs.target_sha }}
+        run: bash scripts/restore-target-files
+
       - name: Build xv6
         run: make
 
@@ -109,6 +117,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+
+      - name: Restore Student Files at target_sha
+        env:
+          TARGET_SHA: ${{ needs.mp-setup.outputs.target_sha }}
+        run: bash scripts/restore-target-files
 
       - name: Run Test — ${{ matrix.test.name }}
         run: |
@@ -143,6 +156,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+
+      - name: Restore Student Files at target_sha
+        env:
+          TARGET_SHA: ${{ needs.mp-setup.outputs.target_sha }}
+        run: bash scripts/restore-target-files
 
       - name: Download All Test Results
         uses: actions/download-artifact@v8
@@ -207,6 +225,15 @@ jobs:
           name: bonus-results
           path: .
         continue-on-error: true
+        
+      - name: Reconstruct Target Commit Info
+        if: needs.mp-setup.outputs.fail != 'true'
+        run: |
+          printf '{"sha":"%s","author":"%s","timestamp":%s}\n' \
+            "${{ needs.mp-setup.outputs.target_sha }}" \
+            "${{ needs.mp-setup.outputs.target_author }}" \
+            "${{ needs.mp-setup.outputs.target_timestamp }}" \
+            > target_commit.json
 
       - name: Record Build Failure
         if: needs.build-discover.result == 'failure' && needs.mp-setup.outputs.fail != 'true'

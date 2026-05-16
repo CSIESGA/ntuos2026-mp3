@@ -3,7 +3,7 @@ from gradelib import *
 r = Runner(save("log"))
 
 @test(2, "Public:Tick Accounting Test 1")
-def public_test1_fp():
+def public_test1_tick():
     r.run_qemu(
         shell_script(["test1 FP"]),
         make_args=["CPUS=1", "INJECT=sched"],
@@ -37,7 +37,7 @@ def public_test1_fp():
     )
 
 @test(2, "Public:Tick Accounting Test 2")
-def public_test2_fp():
+def public_test2_tick():
     r.run_qemu(
         shell_script(["test2 EFDF"]),
         make_args=["CPUS=1", "INJECT=sched"],
@@ -65,7 +65,7 @@ def public_test2_fp():
     )
 
 @test(2, "Public:Tick Accounting Test 3")
-def public_test3_fp():
+def public_test3_tick():
     r.run_qemu(
         shell_script(["test3 DBP"]),
         make_args=["CPUS=1", "INJECT=sched"],
@@ -90,7 +90,7 @@ def public_test3_fp():
     )
 
 @test(2, "Public:Tick Accounting Test 4")
-def public_test4_fp():
+def public_test4_tick():
     r.run_qemu(
         shell_script(["test4 EFDF"]),
         make_args=["CPUS=1", "INJECT=sched"],
@@ -124,7 +124,7 @@ def public_test4_fp():
     )
 
 @test(2, "Public:Tick Accounting Test 5")
-def public_test5_fp():
+def public_test5_tick():
     r.run_qemu(
         shell_script(["test5 DBP"]),
         make_args=["CPUS=1", "INJECT=sched"],
